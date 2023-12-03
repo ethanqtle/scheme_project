@@ -27,12 +27,29 @@ class Frame:
         """Define Scheme SYMBOL to have VALUE."""
         # BEGIN PROBLEM 1
         "*** YOUR CODE HERE ***"
+        # add symbol to bindings
+        self.bindings[symbol] = value
         # END PROBLEM 1
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL. Errors if SYMBOL is not found."""
         # BEGIN PROBLEM 1
         "*** YOUR CODE HERE ***"
+        # check if symbol is in bindings
+        if symbol in self.bindings:
+            return self.bindings[symbol]
+        # check if parent is None
+        elif self.parent is None:
+            raise SchemeError('unknown identifier: {0}'.format(symbol))
+        # check if parent has symbol
+        else:
+            # iteratively check parent
+            check_parent = self.parent
+            while check_parent is not None:
+                if symbol in check_parent.bindings:
+                    return check_parent.bindings[symbol]
+                check_parent = check_parent.parent
+            # if check_parent is None will fall through to the SchemeError below
         # END PROBLEM 1
         raise SchemeError('unknown identifier: {0}'.format(symbol))
 
