@@ -3,6 +3,7 @@ import sys
 from pair import *
 from scheme_utils import *
 from ucb import main, trace
+DEBUG_TRACE = False
 
 import scheme_forms
 
@@ -34,6 +35,12 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        # get procedure by call scheme_eval
+        procedure = scheme_eval(first, env)
+        # using map 
+        args = rest.map(lambda operand: scheme_eval(operand, env))
+        # apply procedure
+        return scheme_apply(procedure, args, env)
         # END PROBLEM 3
 
 def scheme_apply(procedure, args, env):
@@ -45,10 +52,23 @@ def scheme_apply(procedure, args, env):
     if isinstance(procedure, BuiltinProcedure):
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
+        # convert scheme list args to python list
+        py_args = []
+        while args != nil:
+            py_args.append(args.first)
+            args = args.rest
+        # print py_args if DEBUG_TRACE
+        if DEBUG_TRACE:
+            print('py_args: {0}'.format(py_args))
         # END PROBLEM 2
         try:
             # BEGIN PROBLEM 2
             "*** YOUR CODE HERE ***"
+            # check if procedure needs env
+            if procedure.need_env:
+                py_args.append(env)
+            # apply procedure
+            return procedure.py_func(*py_args)
             # END PROBLEM 2
         except TypeError as err:
             raise SchemeError('incorrect number of arguments: {0}'.format(procedure))
