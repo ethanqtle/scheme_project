@@ -43,13 +43,10 @@ class Frame:
             raise SchemeError('unknown identifier: {0}'.format(symbol))
         # check if parent has symbol
         else:
-            # iteratively check parent
-            check_parent = self.parent
-            while check_parent is not None:
-                if symbol in check_parent.bindings:
-                    return check_parent.bindings[symbol]
-                check_parent = check_parent.parent
-            # if check_parent is None will fall through to the SchemeError below
+            # return parent.lookup(symbol)
+            # this call will traverse up parent
+            # frames until it finds the symbol
+            return self.parent.lookup(symbol)
         # END PROBLEM 1
         raise SchemeError('unknown identifier: {0}'.format(symbol))
 
